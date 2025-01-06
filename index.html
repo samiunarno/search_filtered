@@ -2,6 +2,204 @@
 <html lang="en">
 
 <head>
+  <style>
+    /* Reset some default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Arial", sans-serif;
+      background-color: transparent;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 1200px;
+      background-color: #fff;
+      padding: 20px;
+      overflow-y: hidden;
+      /* border-radius: 10px; */
+      /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); */
+    }
+
+    /* Search button styles */
+    .search-button {
+      position: relative;
+      padding: 12px 20px;
+      border-radius: 30px;
+      border: none;
+      background-color: #0066ff;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Text and icon inside the button */
+    .button-text {
+      margin-right: 8px;
+    }
+
+    .button-icon {
+      font-size: 1.3rem;
+    }
+
+    /* Hover effects */
+    .search-button:hover {
+      background-color: #ff0055;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+    }
+
+    .search-button:hover .button-text {
+      color: #ffffff;
+    }
+
+    .search-button:hover .button-icon {
+      transform: translateX(5px);
+    }
+
+    /* Focus effects (when the button is clicked or focused) */
+    .search-button:focus {
+      outline: none;
+      background-color: #ff4081;
+      box-shadow: 0 0 10px #ff4081;
+      transform: scale(1.05);
+    }
+
+    /* Adding a little animation when the button is clicked */
+    .search-button:active {
+      transform: scale(0.98);
+    }
+
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 4rem;
+      letter-spacing: 1px;
+    }
+
+    /* Search and filter bar styles in one line */
+    .search-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-radius: 40px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .search-input,
+    .filter-dropdown {
+      padding: 10px;
+      border-radius: 40px;
+      border: 1px solid #080000;
+      font-size: 1rem;
+    }
+
+    .search-input {
+      width: 25%;
+      border-radius: 40px;
+    }
+
+    .filter-dropdown {
+      width: 20%;
+      border-radius: 40px;
+      background-color: #f4f4f9;
+      transition: background-color 0.3s;
+    }
+
+    .filter-dropdown:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Cards container styles */
+    .community-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      /* 4 columns */
+      gap: 20px;
+      justify-content: center;
+    }
+
+    /* Individual card styles */
+    .card {
+      background-color: #fff;
+      border-radius: 40px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      text-align: center;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+      width: 120px;
+      /* You can adjust the size */
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      /* This will make the image round */
+      margin-bottom: 10px;
+      border: 3px solid #fff;
+      /* Optional: Add a border around the image */
+    }
+
+    .card h3 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .card p {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .card .country {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .card .topic {
+      font-style: italic;
+      color: #888;
+    }
+
+    .card .title {
+      font-weight: normal;
+      font-size: 16px;
+      color: #555;
+      margin-top: 10px;
+    }
+  </style>
+
+
+
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title></title>
@@ -40,16 +238,310 @@
         <option value="Vice President">Vice President</option>
 
       </select>
+      <button id="searchButton" class="search-button">Search</button>
     </div>
+
 
 
     <div class="community-cards" id="communityCards">
       <!-- Auto Generate><!-->
     </div>
   </div>
+  <script>
+    // Sample data with 29 members and images
+    const members = [
+      {
+        name: "Fleur Hassan-Nahoum",
+        title: "Co-Founder",
+        country: "UAE",
+        topic: "Business",
+        img: "https://thumbs.dreamstime.com/b/passport-photo-african-american-businessman-passport-photo-african-american-businessman-isolated-white-background-cut-168920819.jpg",
+      },
+      {
+        name: "Dorian Barak",
+        title: "Co-Founder",
+        country: "Israel",
+        topic: "Economy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Amb. Aviva Raz Shechter",
+        title: "Ambassador",
+        country: "Israel",
+        topic: "Diplomacy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Aviad Tamir",
+        title: "Head of Israel's Economic and Trade Mission to the UAE",
+        country: "Israel",
+        topic: "Economy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Jon Medved",
+        title: "CEO",
+        country: "US",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Amb. Houda Nonoo",
+        title: "Ambassador",
+        country: "Bahrain",
+        topic: "Diplomacy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Robert Greenway",
+        title: "President & Executive Director",
+        country: "US",
+        topic: "Diplomacy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Aryeh Lightstone",
+        title: "Special Envoy for Economic Normalization",
+        country: "Israel",
+        topic: "Economy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Ariella Steinreich",
+        title: "Senior Vice President",
+        country: "US",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Amb. Amir Hayek",
+        title: "Ambassador",
+        country: "Israel",
+        topic: "Diplomacy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Amb. Neil Wigan",
+        title: "British Ambassador to Israel",
+        country: "UK",
+        topic: "Diplomacy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Avi Solomon",
+        title: "Blind Runner, Leader of People of Determination",
+        country: "Israel",
+        topic: "Human Rights",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Jason Isaacson",
+        title: "Chief Policy and Political Affairs Officer",
+        country: "US",
+        topic: "Politics",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Gidon Bromberg",
+        title: "Co-Director",
+        country: "Israel",
+        topic: "Environment",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Dr. Tareq Abu Hamed",
+        title: "Executive Director",
+        country: "Jordan",
+        topic: "Technology",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Dr. Daphne Richemond Barak",
+        title: "Assistant Professor",
+        country: "Israel",
+        topic: "Education",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Eitan Neishlos",
+        title: "Businessman and Philanthropist",
+        country: "Israel",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Ahdeya Ahmed Alsayed",
+        title: "Journalist and Former Head of the Bahrain Journalists Association",
+        country: "Bahrain",
+        topic: "Media",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Jon Medved",
+        title: "CEO and Founder",
+        country: "Israel",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Benjamin Taylor",
+        title: "Marketing Operations Manager",
+        country: "UAE",
+        topic: "Marketing",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Daniel Bernard",
+        title: "Founder",
+        country: "Israel",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Deepti Ramachandran",
+        title: "Former Protocol and Liaison Manager",
+        country: "India",
+        topic: "Protocol",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Offer Fabian",
+        title: "President",
+        country: "Israel",
+        topic: "Sports",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Shabib A. Bin Shabib",
+        title: "CEO",
+        country: "UAE",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Alaa’ Al Shimmari",
+        title: "Former Head of Strategic Partnerships",
+        country: "UAE",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Sivan Cohen Shachari",
+        title: "Director",
+        country: "Israel",
+        topic: "Technology",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Dr. Majid Al Sarrah",
+        title: "Expert in Public Policy and International Relations",
+        country: "Saudi Arabia",
+        topic: "Politics",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Hamdi Osman",
+        title: "Chairman & CEO",
+        country: "UAE",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Salmaan Jaffery",
+        title: "Chief Business Development Officer",
+        country: "UAE",
+        topic: "Finance",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Asher Fredman",
+        title: "Director for Israel",
+        country: "Israel",
+        topic: "Diplomacy",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Tareq Alnuaimi",
+        title: "Founder & CEO",
+        country: "UAE",
+        topic: "Business",
+        img: "https://via.placeholder.com/150",
+      },
+      {
+        name: "Majed Al Qassimi",
+        title: "Director",
+        country: "UAE",
+        topic: "Technology",
+        img: "https://via.placeholder.com/150",
+      },
+    ];
+
+    // Function to generate member cards dynamically
+    function generateCards(data) {
+      const cardsContainer = document.getElementById("communityCards");
+      cardsContainer.innerHTML = ""; // Clear previous cards
+
+      if (data.length === 0) {
+        cardsContainer.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+
+      data.forEach((member) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+      <img src="${member.img}" alt="${member.name}">
+      <h3>${member.name}</h3>
+      <p class="title"><strong>${member.title}</strong></p>
+      <p class="country">Country: ${member.country}</p>
+      <p class="topic">Topic: ${member.topic}</p>
+    `;
+
+        cardsContainer.appendChild(card);
+      });
+    }
+
+    // Function to filter members based on search input and filters
+    function filterMembers() {
+      const searchName = document.getElementById("searchName").value.toLowerCase();
+      const countryFilter = document.getElementById("countryFilter").value;
+      const topicFilter = document.getElementById("topicFilter").value;
+      const titleFilter = document.getElementById("titleFilter").value;
+
+      const filteredMembers = members.filter((member) => {
+        const matchesName = member.name.toLowerCase().includes(searchName);
+        const matchesCountry = countryFilter
+          ? member.country === countryFilter
+          : true;
+        const matchesTopic = topicFilter ? member.topic === topicFilter : true;
+        const matchesTitle = titleFilter ? member.title === titleFilter : true;
+
+        return matchesName && matchesCountry && matchesTopic && matchesTitle;
+      });
+
+      generateCards(filteredMembers);
+    }
+
+    // Event listeners to trigger filtering whenever the user types or selects a filter
+    document.getElementById("searchName").addEventListener("input", filterMembers);
+    document
+      .getElementById("countryFilter")
+      .addEventListener("change", filterMembers);
+    document
+      .getElementById("topicFilter")
+      .addEventListener("change", filterMembers);
+    document
+      .getElementById("titleFilter")
+      .addEventListener("change", filterMembers);
+
+    // Initial card generation when the page loads
+    generateCards(members);
+
+  </script>
 
 
-  <script src="script.js"></script>
+  <!-- <script src="script.js"></script> -->
 </body>
 
 </html>
